@@ -1,0 +1,8 @@
+"/Users/gernotohner/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=/Users/gernotohner/Applications/CLion Nova.app/Contents/bin/ninja/mac/aarch64/ninja" -G Ninja -S /Users/gernotohner/CLionProjects/CS6420/Assignment3 -B /Users/gernotohner/CLionProjects/CS6420/Assignment3/cmake-build-debug
+-- Found Python: /opt/homebrew/Frameworks/Python.framework/Versions/3.11/bin/python3.11 (found version "3.11.1") found components: Interpreter 
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE  
+-- Configuring done (1.8s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/gernotohner/CLionProjects/CS6420/Assignment3/cmake-build-debug

@@ -1,0 +1,5 @@
+if(EXISTS "/Users/gernotohner/CLionProjects/CS6420/Assignment3/cmake-build-debug/rabin_karp_test[1]_tests.cmake")
+  include("/Users/gernotohner/CLionProjects/CS6420/Assignment3/cmake-build-debug/rabin_karp_test[1]_tests.cmake")
+else()
+  add_test(rabin_karp_test_NOT_BUILT rabin_karp_test_NOT_BUILT)
+endif()
