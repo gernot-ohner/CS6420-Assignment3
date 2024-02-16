@@ -6,12 +6,25 @@
 
 #include <random>
 
+long RabinKarp2D::hash1D(const std::string &key, int m) const {
+    long h = 0;
+    for (int j = 0; j < m; j++) {
+        h = (radix * h + key[j]) % large_prime;
+    }
+    return h;
+}
+
 long RabinKarp2D::hash(const std::vector<std::string> &key, int m) const {
-    return 0l;
+    long hash = 0;
+    for (int i = 0; i < m; i++) {
+        // TODO this is the simplest aggregation function - does it work?
+        hash += hash1D(key[i], m);
+    }
+    return hash;
 }
 
 
-bool check1D(const std::string &txt, const std::string &pattern, const int i) {
+bool RabinKarp2D::check1D(const std::string &txt, const std::string &pattern, const int i) {
     for (int j = 0; j < pattern.length(); j++) {
         if (pattern[j] != txt[i + j]) {
             return false;
@@ -23,14 +36,27 @@ bool check1D(const std::string &txt, const std::string &pattern, const int i) {
 
 bool RabinKarp2D::check(const std::vector<std::string> &txt, const int x, const int y) const {
     for (int i = 0; i < this->pattern_side_length; i++) {
-        const auto& text_row = txt[i + y];
-        const auto& pattern_row = this->pattern[i];
+        const auto &text_row = txt[i + y];
+        const auto &pattern_row = this->pattern[i];
         if (!check1D(text_row, pattern_row, x)) {
             return false;
         }
     }
 
     return true;
+}
+
+std::vector<std::string> RabinKarp2D::get_slice(const std::vector<std::string> &input,
+                                   const int row,
+                                   const int column,
+                                   const int length) const {
+    std::vector<std::string> result{};
+    for (int i = 0; i < length; i++) {
+        const auto &input_row = input[i + row];
+        const auto &input_slice = input_row.substr(column, length);
+        result.push_back(input_slice);
+    }
+    return result;
 }
 
 long RabinKarp2D::long_random_prime() {

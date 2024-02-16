@@ -15,14 +15,20 @@ int main() {
         "10615",
     };
 
-    const auto result_false1 = rabin_karp_2d.check(text, 1, 2);
-    const auto result_true = rabin_karp_2d.check(text, 2, 1);
-    const auto result_false2 = rabin_karp_2d.check(text, 2, 2);
-    std::cout << std::boolalpha << result_false1 << " " << result_true << " " << result_false2 << std::endl;
+    // const auto result_false1 = rabin_karp_2d.check(text, 1, 2);
+    // const auto result_true = rabin_karp_2d.check(text, 2, 1);
+    // const auto result_false2 = rabin_karp_2d.check(text, 2, 2);
+    // std::cout << std::boolalpha << result_false1 << " " << result_true << " " << result_false2 << std::endl;
 
     const auto [x, y] = rabin_karp_2d.search(text);
+
     std::cout << "ACTUAL:   x: " << x << " y: " << y << std::endl;
     std::cout << "EXPECTED: x: " << 3 << " y: " << 2 << std::endl;
+
+    const auto slice = rabin_karp_2d.get_slice(text, 1, 2, 2);
+    for (const auto& basic_string : slice) {
+        std::cout << basic_string << std::endl;
+    }
 
     const auto rc = RabinKarp{"asdf"};
     const auto result = rc.search("thisisasdfatest");
