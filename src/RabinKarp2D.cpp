@@ -4,6 +4,7 @@
 
 #include "RabinKarp2D.h"
 
+#include <iostream>
 #include <random>
 
 long RabinKarp2D::hash1D(const std::string &key, int m) const {
@@ -34,11 +35,11 @@ bool RabinKarp2D::check1D(const std::string &txt, const std::string &pattern, co
     return true;
 }
 
-bool RabinKarp2D::check(const std::vector<std::string> &txt, const int x, const int y) const {
+bool RabinKarp2D::check(const std::vector<std::string> &txt, const int column, const int row) const {
     for (int i = 0; i < this->pattern_side_length; i++) {
-        const auto &text_row = txt[i + y];
+        const auto &text_row = txt[row + i];
         const auto &pattern_row = this->pattern[i];
-        if (!check1D(text_row, pattern_row, x)) {
+        if (!check1D(text_row, pattern_row, column)) {
             return false;
         }
     }
@@ -47,13 +48,15 @@ bool RabinKarp2D::check(const std::vector<std::string> &txt, const int x, const 
 }
 
 std::vector<std::string> RabinKarp2D::get_slice(const std::vector<std::string> &input,
-                                   const int row,
-                                   const int column,
-                                   const int length) const {
+                                                const int row,
+                                                const int column,
+                                                const int row_num,
+                                                const int col_num
+) const {
     std::vector<std::string> result{};
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < row_num; i++) {
         const auto &input_row = input[i + row];
-        const auto &input_slice = input_row.substr(column, length);
+        const auto &input_slice = input_row.substr(column, col_num);
         result.push_back(input_slice);
     }
     return result;
@@ -86,14 +89,84 @@ RabinKarp2D::RabinKarp2D(const std::vector<std::string> &pat): pattern(pat),
                                                                pattern_side_length(pat.size()),
                                                                large_prime(long_random_prime()),
                                                                radix(256),
-                                                               RM(0),
-                                                               pattern_hash(hash(pat, pattern_side_length)) {
+                                                               RM(0) {
+    pattern_hash = hash(pat, pattern_side_length);
     RM = 1;
     for (int i = 1; i <= pattern_side_length - 1; i++) {
         RM = (radix * RM) % large_prime;
     }
 }
 
-std::pair<int, int> RabinKarp2D::search(const std::vector<std::string> &txt) const {
-    return std::make_pair(0, 0);
+std::pair<int, int> RabinKarp2D::search(const std::vector<std::string> &text) const {
+    const auto n = text.size();
+    if (n < pattern_side_length) return {n, n};
+
+    long text_hash = hash(get_slice(text, 0, 0, pattern_side_length, pattern_side_length), pattern_side_length);
+    if ((pattern_hash == text_hash) && check(text, 0, 0))
+        return {0, 0};
+
+    // TODO this doesn't loop often enough
+    std::cout << "pattern hash: " << pattern_hash << std::endl;
+    for (int row = 0; row <= n - pattern_side_length; row++) {
+        for (int column = pattern_side_length; column < n; column++) {
+            auto to_subtract = 0;
+            const auto basic_strings1 = get_slice(text, row, column - pattern_side_length, pattern_side_length, 1);
+            for (const auto &s: basic_strings1) {
+                to_subtract += std::stoi(s);
+            }
+            to_subtract *= RM;
+
+            auto to_add = 0;
+            const auto basic_strings2 = get_slice(text, row, column, pattern_side_length, 1);
+            for (const auto &s: basic_strings2) {
+                to_add += std::stoi(s);
+            }
+
+            text_hash = (text_hash + large_prime - to_subtract % large_prime) % large_prime;
+            text_hash = (text_hash * radix + to_add) % large_prime;
+
+            // match
+            int column_offset = column - pattern_side_length + 1;
+            const bool pattern_hash_match = pattern_hash == text_hash;
+            const bool check_match = check(text, column_offset, row);
+            std::cout << std::boolalpha << "row: " << row << ", column: " << column
+                    << ": hash match: " << pattern_hash_match
+                    << ", check match: " << check_match
+                    << ", text hash: " << text_hash
+                    << std::endl;;
+            if (pattern_hash_match && check_match) {
+                return {column_offset, row};
+            }
+            // END
+        }
+    }
+
+
+    return {n, n}; // no match
 }
+
+// 1D rabin karp search function
+// int RabinKarp::search(const std::string &txt) const {
+//   int n = txt.length();
+//   if (n < m) return n;
+//   long txt_hash = hash(txt, m);
+//
+//   // check for match at offset 0
+//   if ((pat_hash == txt_hash) && check(txt, 0))
+//     return 0;
+//
+//   // check for hash match; if hash match, check for exact match
+//   for (int i = m; i < n; i++) {
+//     // Remove leading digit, add trailing digit, check for match.
+//     txt_hash = (txt_hash + q - RM * txt[i - m] % q) % q;
+//     txt_hash = (txt_hash * R + txt[i]) % q;
+//
+//     // match
+//     int offset = i - m + 1;
+//     if ((pat_hash == txt_hash) && check(txt, offset)){
+//       return offset;
+//     }
+//   }
+//
+//   return n; // no match
+// }

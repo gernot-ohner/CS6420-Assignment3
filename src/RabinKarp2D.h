@@ -16,22 +16,24 @@ private:
     int radix;
     int RM;
 
-    long hash1D(const std::string &key, int m) const;
+    [[nodiscard]] long hash1D(const std::string &key, int m) const;
 
-    [[nodiscard]] long hash(const std::vector<std::string> &key, int m) const;
 
     static bool check1D(const std::string &txt, const std::string &pattern, int i);
-    [[nodiscard]] bool check(const std::vector<std::string> &txt, int x, int y) const;
+    [[nodiscard]] bool check(const std::vector<std::string> &txt, int column, int row) const;
 
 
 
     static long long_random_prime();
 
 public:
-    std::vector<std::string> get_slice(const std::vector<std::string> &input, int row, int column, int length) const;
+    [[nodiscard]] std::vector<std::string> get_slice(const std::vector<std::string> &input,
+        int row, int column, int row_num, int col_num) const;
+    [[nodiscard]] long hash(const std::vector<std::string> &key, int m) const;
+
     explicit RabinKarp2D(const std::vector<std::string> &pat);
 
-    [[nodiscard]] std::pair<int, int> search(const std::vector<std::string> &txt) const;
+    [[nodiscard]] std::pair<int, int> search(const std::vector<std::string> &text) const;
 };
 
 
