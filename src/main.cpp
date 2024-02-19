@@ -1,3 +1,15 @@
+// Gernot F. Ohner
+// CS 6420
+// Assignment #3
+// Instructor: Dr. Rague
+// Due: 02/18/24
+// Version: 1.0
+// Created: 2024-02-18.
+// -----------------------------------------------------------------
+// This program compares the brute force and improved algorithms for
+// the four sum problem implemented in FourSum.cpp.
+// -----------------------------------------------------------------
+
 #include <fstream>
 #include <iostream>
 

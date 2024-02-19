@@ -1,6 +1,14 @@
-//
-// Created by Gernot Ohner on 2024-02-16.
-//
+// Gernot F. Ohner
+// CS 6420
+// Assignment #3
+// Instructor: Dr. Rague
+// Due: 02/18/24
+// Version: 1.0
+// Created: 2024-02-15.
+// -----------------------------------------------------------------
+// This file contains the implementation KMP prefix function
+// -----------------------------------------------------------------
+
 
 #ifndef KMPPREFIXFUNCTION_H
 #define KMPPREFIXFUNCTION_H

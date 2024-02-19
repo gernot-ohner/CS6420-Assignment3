@@ -7,7 +7,6 @@ add_executable(Assignment3 src/main.cpp
         src/alg_strings.cpp
         src/RabinKarp2D.cpp
         src/RabinKarp2D.h
-        src/KMPPrefixFunction.cpp
         src/KMPPrefixFunction.h
         src/util.h
 )
@@ -41,7 +40,6 @@ add_executable(
 
 add_executable(
         kmp_prefix_test
-        src/KMPPrefixFunction.cpp
         src/KMPPrefixFunction.h
         tests/test-kmp-prefix.cpp
 )
