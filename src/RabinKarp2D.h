@@ -34,28 +34,23 @@ private:
     [[nodiscard]] long hash1D(const std::vector<T> &key, int m) const;
 
 
-
     static bool check1D(const std::vector<T> &txt, const std::vector<T> &pattern, int i);
 
     [[nodiscard]] bool check(const matrix_t &txt, int column, int row) const;
 
-
     static long long_random_prime();
 
-public:
-    long roll_hash(long hash, Coordinate loc, const matrix_t &text, int m, long row_start_hash) const;
+    [[nodiscard]] long roll_hash(long hash, Coordinate loc, const matrix_t &text, int m, long row_start_hash) const;
 
     [[nodiscard]] matrix_t get_slice(const matrix_t &input,
                                      int row, int column, int length) const;
 
-    std::vector<T> get_char_slice(const matrix_t &input, int row, int column,
-                                     int row_num) const;
-
     [[nodiscard]] long hash(const matrix_t &key, int m) const;
 
+public:
     explicit RabinKarp2D(const matrix_t &pat, int radix);
 
-    [[nodiscard]] std::pair<int, int> search(const matrix_t &text) const;
+    [[nodiscard]] Coordinate search(const matrix_t &text) const;
 };
 
 

@@ -11,7 +11,6 @@
 // -----------------------------------------------------------------
 
 
-
 #include "RabinKarp2D.h"
 
 #include <random>
@@ -25,14 +24,14 @@ long RabinKarp2D::hash1D(const std::vector<T> &key, int m) const {
 }
 
 
-long RabinKarp2D::roll_hash(long hash, const Coordinate loc, const matrix_t &text, const int m, long row_start_hash) const {
-
+long RabinKarp2D::roll_hash(long hash, const Coordinate loc, const matrix_t &text, const int m,
+                            long row_start_hash) const {
     if (loc.col + m >= text.size()) {
         // remove old row contribution
         long old_row_contribution = 0;
         for (int j = 0; j < m; j = j + 1) {
             const auto val = text[loc.row][j];
-            const auto factor = std::pow(radix, m*m - m*j - 1);
+            const auto factor = std::pow(radix, m * m - m * j - 1);
             old_row_contribution += val * factor;
         }
         row_start_hash -= old_row_contribution;
@@ -43,13 +42,12 @@ long RabinKarp2D::roll_hash(long hash, const Coordinate loc, const matrix_t &tex
         long new_row_contrib = 0;
         for (int j = 0; j < m; ++j) {
             const auto val = text[loc.row + m][j];
-            const auto factor = std::pow(radix, m*m - m*(j+1));
+            const auto factor = std::pow(radix, m * m - m * (j + 1));
             new_row_contrib += val * factor;
         }
         row_start_hash += new_row_contrib;
 
         return row_start_hash;
-
     } else {
         long pow = std::pow(radix, m * m - m);
         hash = hash % pow;
@@ -114,9 +112,9 @@ std::vector<T> vector_substr(const std::vector<T> &vec, size_t start, size_t len
 }
 
 std::vector<std::vector<T> > RabinKarp2D::get_slice(const matrix_t &input,
-                                                       const int row,
-                                                       const int column,
-                                                       const int length
+                                                    const int row,
+                                                    const int column,
+                                                    const int length
 ) const {
     std::vector<std::vector<T> > result{};
     for (int i = 0; i < length; i++) {
@@ -151,10 +149,10 @@ long RabinKarp2D::long_random_prime() {
 }
 
 RabinKarp2D::RabinKarp2D(const matrix_t &pat, int radix): pattern(pat),
-    pattern_side_length(pat.size()),
-    large_prime(long_random_prime()),
-    radix(radix),
-    RM(0) {
+                                                          pattern_side_length(pat.size()),
+                                                          large_prime(long_random_prime()),
+                                                          radix(radix),
+                                                          RM(0) {
     pattern_hash = hash(pat, pattern_side_length);
     RM = 1;
     for (int i = 1; i <= pattern_side_length - 1; i++) {
@@ -163,9 +161,9 @@ RabinKarp2D::RabinKarp2D(const matrix_t &pat, int radix): pattern(pat),
 }
 
 
-std::pair<int, int> RabinKarp2D::search(const matrix_t &text) const {
+Coordinate RabinKarp2D::search(const matrix_t &text) const {
     const auto n = text.size();
-    if (n < pattern_side_length) return {n, n};
+    if (n < pattern_side_length) return {-1, -1};
 
     long text_hash = hash(get_slice(text, 0, 0, pattern_side_length), pattern_side_length);
     if ((pattern_hash == text_hash) && check(text, 0, 0))
@@ -177,8 +175,10 @@ std::pair<int, int> RabinKarp2D::search(const matrix_t &text) const {
             if ((pattern_hash == text_hash) && check(text, column, row)) {
                 return {column, row};
             }
-            text_hash = roll_hash(text_hash, {row, column}, text, pattern_side_length, row_start_hash);
+            if (row != text.size() || column != text.size()) {
+                text_hash = roll_hash(text_hash, {row, column}, text, pattern_side_length, row_start_hash);
+            }
         }
     }
-    return {n, n}; // no match
+    return {-1, -1}; // no match
 }

@@ -16,12 +16,13 @@
 #include <iostream>
 #include <ostream>
 
-inline void test_pattern(const matrix_t &text,
-                         const matrix_t &pattern, int expected_x, int expected_y) {
+inline Coordinate test_pattern(const matrix_t &text,
+                         const matrix_t &pattern) {
     const auto &rabin_karp_2d = RabinKarp2D{pattern, 10};
-    const auto [x, y] = rabin_karp_2d.search(text);
+    const auto loc = rabin_karp_2d.search(text);
     std::cout << "    Pattern found at row, column index: "
-            << std::endl << "    {" << x << ", " << y << "}" << std::endl;
+            << std::endl << "    {" << loc.row << ", " << loc.col << "}" << std::endl;
+    return loc;
 }
 
 inline void print_matrix(const matrix_t &text) {

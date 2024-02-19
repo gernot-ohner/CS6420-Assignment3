@@ -37,22 +37,22 @@ int main() {
     std::cout << std::endl;
     std::cout << "    Pattern 1:" << std::endl;
     print_matrix(pattern1);
-    test_pattern(text, pattern1, 2, 1);
+    test_pattern(text, pattern1);
     std::cout << std::endl;
 
     std::cout << "    Pattern 2:" << std::endl;
     print_matrix(pattern2);
-    test_pattern(text, pattern2, 0, 0);
+    test_pattern(text, pattern2);
     std::cout << std::endl;
 
     std::cout << "    Pattern 3:" << std::endl;
     print_matrix(pattern3);
-    test_pattern(text, pattern3, 0, 3);
+    test_pattern(text, pattern3);
     std::cout << std::endl;
 
     std::cout << "    Pattern 4:" << std::endl;
     print_matrix(pattern4);
-    test_pattern(text, pattern4, 2, 3);
+    test_pattern(text, pattern4);
     std::cout << std::endl;
 
     return 0;
