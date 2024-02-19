@@ -8,7 +8,9 @@ add_executable(Assignment3 src/main.cpp
         src/RabinKarp2D.cpp
         src/RabinKarp2D.h
         src/KMPPrefixFunction.cpp
-        src/KMPPrefixFunction.h)
+        src/KMPPrefixFunction.h
+        src/rabinkarp2d2.cpp
+        src/rabinkarp2d2.h)
 
 
 include(FetchContent)
@@ -26,6 +28,14 @@ add_executable(
         src/RabinKarp2D.h
         tests/test-rabin-karp.cpp
 
+)
+
+
+add_executable(
+        roll_hash_test
+        src/RabinKarp2D.cpp
+        src/RabinKarp2D.h
+        tests/test-roll-hash.cpp
 )
 
 add_executable(
@@ -46,7 +56,14 @@ target_link_libraries(
         GTest::gtest_main
 )
 
+target_link_libraries(
+        roll_hash_test
+        GTest::gtest_main
+)
+
+
 
 include(GoogleTest)
 gtest_discover_tests(rabin_karp_test)
 gtest_discover_tests(kmp_prefix_test)
+gtest_discover_tests(roll_hash_test)
