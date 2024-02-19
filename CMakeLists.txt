@@ -9,7 +9,8 @@ add_executable(Assignment3 src/main.cpp
         src/RabinKarp2D.h
         src/KMPPrefixFunction.cpp
         src/KMPPrefixFunction.h
-        )
+        src/util.h
+)
 
 
 include(FetchContent)
@@ -26,6 +27,7 @@ add_executable(
         src/RabinKarp2D.cpp
         src/RabinKarp2D.h
         tests/test-rabin-karp.cpp
+        src/util.h
 
 )
 

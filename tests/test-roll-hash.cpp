@@ -7,9 +7,7 @@
 
 
 TEST(RollHashMinimal, BasicAssertions) {
-    std::vector<long> hashes{2531, 3194, 5718, 1840};
-
-    matrix_t text = {
+    const matrix_t text = {
         {2, 3, 9},
         {5, 1, 4},
         {7, 8, 0},
@@ -57,7 +55,7 @@ TEST(RollHash3N, BasicAssertions) {
 }
 
 TEST(RollHash4N, BasicAssertions) {
-    matrix_t text = {
+    const matrix_t text = {
         {2, 3, 9, 1, 3},
         {5, 1, 2, 3, 4},
         {2, 3, 1, 5, 3},
