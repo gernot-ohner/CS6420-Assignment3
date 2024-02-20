@@ -6,7 +6,7 @@
 // Version: 1.0
 // Created: 2024-02-18.
 // -----------------------------------------------------------------
-// This file contains the implementation of the 2D rabin karp
+// This file contains the implementation of the 2D Rabin Karp
 // algorithm.
 // -----------------------------------------------------------------
 
@@ -15,19 +15,13 @@
 
 #include <random>
 
-long RabinKarp2D::hash1D(const std::vector<T> &key, int m) const {
-    long h = 0;
-    for (int j = 0; j < m; j++) {
-        h = (radix * h + key[j]) % large_prime;
-    }
-    return h;
-}
-
-
 long RabinKarp2D::roll_hash(long hash, const Coordinate loc, const matrix_t &text, const int m,
                             long row_start_hash) const {
+    // We've reached the end of the row
+    // Therefore we need to go back to the start of the row and roll down
     if (loc.col + m >= text.size()) {
-        // remove old row contribution
+        // Calculate the contribution of the old row
+        // and subtract it from the hash
         long old_row_contribution = 0;
         for (int j = 0; j < m; j = j + 1) {
             const auto val = text[loc.row][j];
@@ -36,9 +30,10 @@ long RabinKarp2D::roll_hash(long hash, const Coordinate loc, const matrix_t &tex
         }
         row_start_hash -= old_row_contribution;
 
+        // shift right by 1
         row_start_hash *= radix;
 
-        // Add the contribution of the entering row
+        // Calculate the contribution of the new row and add it to the hash
         long new_row_contrib = 0;
         for (int j = 0; j < m; ++j) {
             const auto val = text[loc.row + m][j];
@@ -48,8 +43,10 @@ long RabinKarp2D::roll_hash(long hash, const Coordinate loc, const matrix_t &tex
         row_start_hash += new_row_contrib;
 
         return row_start_hash;
+
     } else {
-        long pow = std::pow(radix, m * m - m);
+        // We haven't reached the end of the row so we simply roll to the right by one
+        const long pow = std::pow(radix, m * m - m);
         hash = hash % pow;
         for (int i = 0; i < m; ++i) {
             hash *= radix;
@@ -61,13 +58,12 @@ long RabinKarp2D::roll_hash(long hash, const Coordinate loc, const matrix_t &tex
     return hash;
 }
 
-long RabinKarp2D::hash(const std::vector<std::vector<T> > &key, int m) const {
+long RabinKarp2D::hash(const std::vector<std::vector<T> > &key, const int m) const {
     long hash = 0;
     std::vector<long> items{};
 
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < m; ++j) {
-            // TODO add moduloing!
             const auto x = key[j][i];
             hash = hash * radix + x;
         }
@@ -88,8 +84,10 @@ bool RabinKarp2D::check1D(const std::vector<T> &txt, const std::vector<T> &patte
 
 bool RabinKarp2D::check(const matrix_t &txt, const int column, const int row) const {
     for (int i = 0; i < this->pattern_side_length; i++) {
+        // extract text row and pattern row
         const auto &text_row = txt[row + i];
         const auto &pattern_row = this->pattern[i];
+        // if any row is wrong, we do not have a match
         if (!check1D(text_row, pattern_row, column)) {
             return false;
         }
@@ -163,19 +161,27 @@ RabinKarp2D::RabinKarp2D(const matrix_t &pat, int radix): pattern(pat),
 
 Coordinate RabinKarp2D::search(const matrix_t &text) const {
     const auto n = text.size();
-    if (n < pattern_side_length) return {-1, -1};
+    if (n < pattern_side_length) return {-1, -1}; // no possible match
 
     long text_hash = hash(get_slice(text, 0, 0, pattern_side_length), pattern_side_length);
     if ((pattern_hash == text_hash) && check(text, 0, 0))
         return {0, 0};
 
     for (int row = 0; row <= n - pattern_side_length; row++) {
+        // keep track of the hash at the start of the row, so we can go back and roll down
+        // in the case that we've reached the end of the row
         const long row_start_hash = text_hash;
+
         for (int column = 0; column <= n - pattern_side_length; column++) {
+
+            // check if the hash matches and the text also matches
+            // if so, return the result
             if ((pattern_hash == text_hash) && check(text, column, row)) {
                 return {column, row};
             }
-            if (row != text.size() || column != text.size()) {
+
+            // unless we've reached the end, roll the hash to the next position
+            if (row != (text.size() - pattern_side_length) || column != (text.size() - pattern_side_length)) {
                 text_hash = roll_hash(text_hash, {row, column}, text, pattern_side_length, row_start_hash);
             }
         }

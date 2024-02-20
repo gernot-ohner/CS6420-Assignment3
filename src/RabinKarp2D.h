@@ -31,9 +31,6 @@ private:
     int radix;
     int RM;
 
-    [[nodiscard]] long hash1D(const std::vector<T> &key, int m) const;
-
-
     static bool check1D(const std::vector<T> &txt, const std::vector<T> &pattern, int i);
 
     [[nodiscard]] bool check(const matrix_t &txt, int column, int row) const;
@@ -50,6 +47,9 @@ private:
 public:
     explicit RabinKarp2D(const matrix_t &pat, int radix);
 
+    /**
+     *
+     */
     [[nodiscard]] Coordinate search(const matrix_t &text) const;
 };
 
